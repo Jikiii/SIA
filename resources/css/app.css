@@ -1,11 +1,70 @@
-@import 'tailwindcss';
+/* ============================
+   Dashboard Cards
+   ============================ */
+.dashboard-card {
+    background-color: #f8f9fa;  /* light gray card background */
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+.dashboard-card h3 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color: #007bff; /* blue numbers */
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+.dashboard-card p {
+    font-size: 1rem;
+    color: #6c757d; /* muted text */
+}
+
+.dashboard-card:hover {
+    background-color: #e2e6ea;  /* slightly darker on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* ============================
+   Quick Action Buttons
+   ============================ */
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-secondary {
+    border-radius: 6px;
+    padding: 10px 0;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-outline-info:hover {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* ============================
+   Optional Table Hover (future)
+   ============================ */
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+    cursor: pointer;
 }
