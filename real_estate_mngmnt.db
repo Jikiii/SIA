@@ -7,7 +7,7 @@ USE dreamhome_pit;
 -- 1. BRANCH table
 -- =====================================================
 CREATE TABLE Branch (
-  BranchID INT AUTO_INCREMENT PRIMARY KEY
+  BranchID INT AUTO_INCREMENT PRIMARY KEY,
 	BranchName VARCHAR(100) NOT NULL,
 	Street VARCHAR(100),
 	Area VARCHAR(100),
@@ -21,7 +21,7 @@ CREATE TABLE Branch (
 -- 2. STAFF table
 -- =====================================================
 CREATE TABLE Staff (
-	StaffID INT AUTO_INCREMENT PRIMARY KEY
+	StaffID INT AUTO_INCREMENT PRIMARY KEY,
 	BranchID INT NOT NULL,
 	FirstName VARCHAR(50) NOT NULL,
 	LastName VARCHAR(50) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE Owner (
 -- 7. PROPERTY
 -- =====================================================
 CREATE TABLE Property (
-	PropertyID INT AUTO_INCREMENT PRIMARY KEY
+	PropertyID INT AUTO_INCREMENT PRIMARY KEY,
 	StaffID INT,
 	OwnerID INT,
 	PropertyTypeID INT,
