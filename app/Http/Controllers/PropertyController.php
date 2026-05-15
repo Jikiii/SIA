@@ -5,77 +5,148 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Property;
 use App\Models\Staff;
-use App\Models\Branch;
+use App\Models\PropertyType;
 
 class PropertyController extends Controller
 {
+    // =========================
+    // DISPLAY ALL PROPERTIES
+    // =========================
     public function index()
     {
-        $properties = Property::with(['staff', 'branch'])
-            ->orderBy('PropertyID', 'asc')
+        $properties = Property::with(['staff', 'type'])
+            ->orderBy('PropertyID', 'desc')
             ->get();
 
-        return view('properties', compact('properties'));
+        return view('properties.index', compact('properties'));
     }
 
+    // =========================
+    // SHOW CREATE FORM
+    // =========================
     public function create()
     {
         $staff = Staff::all();
-        $branches = Branch::all();
+        $types = PropertyType::all();
 
-        return view('properties.create', compact('staff', 'branches'));
+        return view('properties.create', compact('staff', 'types'));
     }
 
+    // =========================
+    // STORE PROPERTY
+    // =========================
     public function store(Request $request)
     {
         $request->validate([
             'StreetName' => 'required',
-            'City'       => 'required',
-            'Rooms'      => 'required|numeric',
-            'RentAmount' => 'required|numeric'
+            'City' => 'required',
+            'Rooms' => 'required|numeric',
+            'RentAmount' => 'required|numeric',
+            'StaffID' => 'required',
+            'PropertyTypeID' => 'required'
         ]);
 
-        Property::create($request->all());
+        Property::create([
+            'StaffID' => $request->StaffID,
+            'PropertyTypeID' => $request->PropertyTypeID,
+            'StreetName' => $request->StreetName,
+            'District' => $request->District,
+            'City' => $request->City,
+            'PostalCode' => $request->PostalCode,
+            'Rooms' => $request->Rooms,
+            'RentAmount' => $request->RentAmount,
+            'Status' => 'Available'
+        ]);
 
         return redirect()->route('properties.index')
             ->with('success', 'Property added successfully!');
     }
 
-    public function show($id)
-    {
-        $property = Property::with(['staff', 'branch'])
-            ->findOrFail($id);
+    // =========================
+    // SHOW SINGLE PROPERTY
+    // =========================
+   public function show($id)
+{
+    $property = Property::with(['staff', 'type', 'owner', 'leases.renter', 'inspections.staff'])
+        ->findOrFail($id);
 
-        return view('properties.show', compact('property'));
-    }
-
+    return view('properties.show', compact('property'));
+}
+    // =========================
+    // SHOW EDIT FORM
+    // =========================
     public function edit($id)
     {
         $property = Property::findOrFail($id);
-        $staff = Staff::all();
-        $branches = Branch::all();
 
-        return view('properties.edit', compact('property', 'staff', 'branches'));
+        $staff = Staff::all();
+
+        $types = PropertyType::all();
+
+        return view('properties.edit', compact(
+            'property',
+            'staff',
+            'types'
+        ));
     }
 
+    // =========================
+    // UPDATE PROPERTY
+    // =========================
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'StreetName' => 'required',
+            'City' => 'required',
+            'Rooms' => 'required|numeric',
+            'RentAmount' => 'required|numeric',
+            'StaffID' => 'required',
+            'PropertyTypeID' => 'required'
+        ]);
+
         $property = Property::findOrFail($id);
-        $property->update($request->all());
+
+        $property->update([
+            'StaffID' => $request->StaffID,
+            'PropertyTypeID' => $request->PropertyTypeID,
+            'StreetName' => $request->StreetName,
+            'District' => $request->District,
+            'City' => $request->City,
+            'PostalCode' => $request->PostalCode,
+            'Rooms' => $request->Rooms,
+            'RentAmount' => $request->RentAmount,
+            'Status' => $request->Status
+        ]);
 
         return redirect()->route('properties.index')
             ->with('success', 'Property updated successfully!');
     }
 
-    /* Soft withdraw (like your old system) */
-    public function destroy($id)
-    {
-        $property = Property::findOrFail($id);
+    // =========================
+    // DELETE PROPERTY
+    // =========================
+public function destroy($id)
+{
+    // Find the lease
+    $lease = Lease::findOrFail($id);
 
-        $property->Status = 'Withdrawn';
-        $property->save();
+    // Keep the related property
+    $property = $lease->property;
 
-        return redirect()->route('properties.index')
-            ->with('success', 'Property withdrawn successfully!');
+    // Delete the lease
+    $lease->delete();
+
+    // Update the property status in DB
+    if ($property) {
+        $hasActiveLease = $property->leases()
+            ->where('Status', 'Active')
+            ->where('EndDate', '>=', \Carbon\Carbon::today())
+            ->exists();
+
+        $property->Status = $hasActiveLease ? 'Rented' : 'Available';
+        $property->save(); // <-- writes to database
     }
+
+    return redirect()->route('leases.index')->with('success', 'Lease deleted and property status updated.');
+}
 }

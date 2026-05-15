@@ -14,7 +14,7 @@ class StaffController extends Controller
             ->orderBy('StaffID', 'asc')
             ->get();
 
-        return view('staff', compact('staff'));
+        return view('staff.index', compact('staff'));
     }
 
     public function create()
@@ -25,15 +25,20 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'FirstName' => 'required',
-            'LastName'  => 'required',
-            'Position'  => 'required',
-            'Salary'    => 'required|numeric',
-            'BranchID'  => 'required'
+        Staff::create([
+            'BranchID'    => $request->branch_no,
+            'FirstName'   => $request->first_name,
+            'LastName'    => $request->last_name,
+            'Address'     => $request->address,
+            'Phone'       => $request->telephone,
+            'Email'       => $request->email,
+            'Gender'      => $request->sex,
+            'BirthDate'   => $request->date_of_birth,
+            'Position'    => $request->job_title,
+            'Salary'      => $request->salary,
+            'HireDate'    => $request->date_joined,
+            'TypingSpeed' => $request->typing_speed ?? null,
         ]);
-
-        Staff::create($request->all());
 
         return redirect()->route('staff.index')
             ->with('success', 'Staff added successfully!');
@@ -57,7 +62,22 @@ class StaffController extends Controller
     public function update(Request $request, $id)
     {
         $staff = Staff::findOrFail($id);
-        $staff->update($request->all());
+
+        // ✅ FIXED UPDATE (NO REQUEST->ALL BUG)
+        $staff->update([
+            'BranchID'    => $request->branch_no,
+            'FirstName'   => $request->first_name,
+            'LastName'    => $request->last_name,
+            'Address'     => $request->address,
+            'Phone'       => $request->telephone,
+            'Email'       => $request->email,
+            'Gender'      => $request->sex,
+            'BirthDate'   => $request->date_of_birth,
+            'Position'    => $request->job_title,
+            'Salary'      => $request->salary,
+            'HireDate'    => $request->date_joined,
+            'TypingSpeed' => $request->typing_speed ?? null,
+        ]);
 
         return redirect()->route('staff.index')
             ->with('success', 'Staff updated successfully!');

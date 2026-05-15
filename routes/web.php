@@ -12,10 +12,9 @@ use App\Http\Controllers\InspectionController;
 // Dashboard (Home)
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-// Pages for each section
-Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
-Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
-Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
-Route::get('/renters', [RenterController::class, 'index'])->name('renters.index');
-Route::get('/leases', [LeaseController::class, 'index'])->name('leases.index');
-Route::get('/inspections', [InspectionController::class, 'index'])->name('inspections.index');
+Route::resource('branches', BranchController::class);
+Route::resource('staff', StaffController::class);
+Route::resource('properties', PropertyController::class);
+Route::resource('renters', RenterController::class);
+Route::resource('leases', LeaseController::class);
+Route::resource('inspections', InspectionController::class);

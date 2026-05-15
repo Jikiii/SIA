@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Branch extends Model
 {
-    protected $table = 'Branch';
-
-    protected $primaryKey = 'BranchID';
-
-    public $timestamps = false;
+    protected $table = 'Branch';          
+    protected $primaryKey = 'BranchID';  
+    public $timestamps = false;           
 
     protected $fillable = [
         'BranchName',
@@ -19,6 +17,6 @@ class Branch extends Model
         'City',
         'PostCode',
         'ContactNo',
-        'Email'
+        'Email',
     ];
 }
