@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1️⃣ Update property statuses automatically
+        // Update property statuses automatically
         $properties = Property::with('leases')->get();
 
         foreach ($properties as $property) {
@@ -30,11 +30,11 @@ class DashboardController extends Controller
             }
         }
 
-        // 2️⃣ Fetch counts for dashboard
+        //  Fetch counts for dashboard
       $counts = [
         'branches' => DB::table('Branch')->count(),
         'staff' => DB::table('Staff')->count(),
-        'properties' => DB::table('Property')->count(), // <-- includes rented + available
+        'properties' => DB::table('Property')->count(), 
         'renters' => DB::table('Renter')->count(),
         'leases' => DB::table('Lease')->where('Status','Active')->count(),
         'inspections' => DB::table('Inspection')->count(),

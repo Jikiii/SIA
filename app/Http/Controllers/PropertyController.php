@@ -9,9 +9,9 @@ use App\Models\PropertyType;
 
 class PropertyController extends Controller
 {
-    // =========================
+   
     // DISPLAY ALL PROPERTIES
-    // =========================
+  
     public function index()
     {
         $properties = Property::with(['staff', 'type'])
@@ -21,9 +21,9 @@ class PropertyController extends Controller
         return view('properties.index', compact('properties'));
     }
 
-    // =========================
+  
     // SHOW CREATE FORM
-    // =========================
+   
     public function create()
     {
         $staff = Staff::all();
@@ -32,9 +32,9 @@ class PropertyController extends Controller
         return view('properties.create', compact('staff', 'types'));
     }
 
-    // =========================
+  
     // STORE PROPERTY
-    // =========================
+   
     public function store(Request $request)
     {
         $request->validate([
@@ -62,9 +62,9 @@ class PropertyController extends Controller
             ->with('success', 'Property added successfully!');
     }
 
-    // =========================
+   
     // SHOW SINGLE PROPERTY
-    // =========================
+
    public function show($id)
 {
     $property = Property::with(['staff', 'type', 'owner', 'leases.renter', 'inspections.staff'])
@@ -72,9 +72,8 @@ class PropertyController extends Controller
 
     return view('properties.show', compact('property'));
 }
-    // =========================
+  
     // SHOW EDIT FORM
-    // =========================
     public function edit($id)
     {
         $property = Property::findOrFail($id);
@@ -90,9 +89,8 @@ class PropertyController extends Controller
         ));
     }
 
-    // =========================
+    
     // UPDATE PROPERTY
-    // =========================
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -122,9 +120,9 @@ class PropertyController extends Controller
             ->with('success', 'Property updated successfully!');
     }
 
-    // =========================
+   
     // DELETE PROPERTY
-    // =========================
+  
 public function destroy($id)
 {
     // Find the lease
@@ -144,7 +142,7 @@ public function destroy($id)
             ->exists();
 
         $property->Status = $hasActiveLease ? 'Rented' : 'Available';
-        $property->save(); // <-- writes to database
+        $property->save(); // save to database
     }
 
     return redirect()->route('leases.index')->with('success', 'Lease deleted and property status updated.');

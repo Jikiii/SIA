@@ -24,50 +24,45 @@ class Property extends Model
         'Status'
     ];
 
-    // ======================
+  
     // Relationship: STAFF (Manager)
-    // ======================
+    
     public function staff()
     {
         return $this->belongsTo(Staff::class, 'StaffID', 'StaffID');
     }
 
-    // ======================
+
     // Relationship: PROPERTY TYPE
-    // ======================
     public function type()
     {
         return $this->belongsTo(PropertyType::class, 'PropertyTypeID', 'PropertyTypeID');
     }
 
-    // ======================
+    
     // Relationship: OWNER
-    // ======================
     public function owner()
     {
         return $this->belongsTo(Owner::class, 'OwnerID', 'OwnerID');
     }
 
-    // ======================
+    
     // Relationship: LEASES
-    // ======================
     public function leases()
     {
         return $this->hasMany(Lease::class, 'PropertyID', 'PropertyID');
     }
 
-    // ======================
+   
     // Relationship: INSPECTIONS
-    // ======================
     public function inspections()
     {
         return $this->hasMany(Inspection::class, 'PropertyID', 'PropertyID');
     }
 
-    // ======================
+    
     // Accessor: Current status based on active leases
     // Returns 'Rented' if there's an active lease, else 'Available'
-    // ======================
     public function getCurrentStatusAttribute()
     {
         // Check if there is any active lease
@@ -76,9 +71,9 @@ class Property extends Model
         return $activeLease ? 'Rented' : 'Available';
     }
 
-    // ======================
+   
     // Optional: Latest lease
-    // ======================
+    
     public function latestLease()
     {
         return $this->hasOne(Lease::class, 'PropertyID', 'PropertyID')->latest('EndDate');
